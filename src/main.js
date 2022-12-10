@@ -5,6 +5,7 @@ const formHtml = document.querySelector(".form");
 const listEl = document.querySelector(".list")
 
 formHtml.addEventListener("submit", foo);
+listEl.addEventListener("click", deleteMarkup);
 
 function foo(evt) {
   evt.preventDefault();
@@ -14,15 +15,20 @@ function foo(evt) {
   }
   const obj = createDataTask(value);
   saveData(obj);
-
+init()
   evt.target.reset();
 }
 
 function saveData(value) {
   const allTasks = getData();
   allTasks.push(value);
+  saveItems(allTasks);
+}
+
+function saveItems(allTasks) {
   localStorage.setItem("tasks", JSON.stringify(allTasks));
 }
+
 
 function getData() {
   const data = localStorage.getItem("tasks");
@@ -40,7 +46,9 @@ function init() {
 }
 
 function addListMarkupToHTML(markup) {
-    listEl.insertAdjacentHTML('beforeend', markup)
+  listEl.innerHTML = markup;
+  console.log("123")
+    // listEl.insertAdjacentHTML('beforeend', markup)
 }
 
 function makeListMarkup(arr = []) {
@@ -55,3 +63,17 @@ function makeListMarkup(arr = []) {
 }
 
 init()
+
+function deleteMarkup(evt) {
+  if (evt.target.nodeName !== "BUTTON") {
+      return
+  }
+  const parent = evt.target.closest(".item")
+  const idTask = parent.dataset.id;
+  parent.remove();
+  // console.log(idTask)
+
+  const taskArr = getData();
+  const newTaskArr = taskArr.filter((el) => el.id !== Number(idTask));
+  saveItems(newTaskArr);
+}
