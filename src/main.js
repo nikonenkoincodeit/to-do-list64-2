@@ -10,6 +10,21 @@ evt.preventDefault();
 const value = evt.target.message.value.trim()
 if(!value){
 return
+    }
+    saveData(value)
+    
+    evt.target.reset()
 }
-console.log(value)
+
+function saveData(value) {
+    const allTasks = getData()
+    allTasks.push(value);
+    localStorage.setItem("tasks", JSON.stringify(allTasks));
+    
 }
+
+function getData() {
+    const data = localStorage.getItem('tasks');
+    return data ? JSON.parse(data) : [];
+}
+
